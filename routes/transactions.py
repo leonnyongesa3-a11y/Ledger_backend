@@ -11,7 +11,6 @@ transactions_bp = Blueprint("transactions", __name__)
 @transactions_bp.route("", methods=["GET"])
 def get_transactions():
 
-
     transactions = (
         Transaction.query.order_by(Transaction.date.desc())
         .all()
@@ -33,9 +32,13 @@ def get_transaction(id):
 
 @transactions_bp.route("", methods=["POST"])
 def create_transaction():
-
+    print("POST route reached")
 
     data = request.get_json()
+    print(data)
+
+    category_name = data.get("category")
+    print("Category received:", category_name)
 
     merchant = data.get("merchant")
     amount = data.get("amount")
@@ -51,6 +54,8 @@ def create_transaction():
     category = Category.query.filter_by(
         id=category_name,
     ).first()
+
+    print("Category found:", category)
 
     if not category:
         return jsonify({

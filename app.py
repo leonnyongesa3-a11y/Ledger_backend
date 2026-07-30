@@ -55,6 +55,7 @@ def create_app():
         print(f"{rule} -> {sorted(rule.methods)}")
     print("=========================\n")
 
+
     return app
 
 app = create_app()
