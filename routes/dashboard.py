@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from sqlalchemy import func
-from app import db
+from extensions import db
 
 from models.transaction import Transaction
 from models.savings_goal import SavingsGoal
