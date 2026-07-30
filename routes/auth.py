@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
+from models.category import Category
 
 from extensions import db
 from models.user import User
@@ -41,6 +42,28 @@ def register():
         "message": "Account created successfully.",
         "user": user.to_dict()
     }), 201
+
+
+DEFAULT_CATEGORIES = [
+    "Groceries",
+    "Dining",
+    "Transport",
+    "Shopping",
+    "Subscriptions",
+    "Health",
+    "Utilities",
+    "Other"
+]
+
+for category_name in DEFAULT_CATEGORIES:
+    db.session.add(
+        Category(
+            name=category_name,
+            user_id=User.id
+        )
+    )
+
+db.session.commit()
 
 @auth_bp.route("/login", methods=["POST"])
 def login():

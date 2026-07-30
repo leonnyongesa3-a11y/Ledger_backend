@@ -5,7 +5,7 @@ from extensions import db, migrate, jwt, cors
 # Import blueprints 
 from routes.auth import auth_bp
 from routes.transactions import transactions_bp
-# from routes.categories import categories_bp
+from routes.categories import categories_bp
 # from routes.budgets import budgets_bp
 # from routes.savings import savings_bp
 # from routes.dashboard import dashboard_bp
@@ -45,7 +45,7 @@ def create_app():
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix="/api/auth")
     app.register_blueprint(transactions_bp, url_prefix="/api/transactions")
-    # app.register_blueprint(categories_bp, url_prefix="/api/categories")
+    app.register_blueprint(categories_bp, url_prefix="/api/categories")
     # app.register_blueprint(budgets_bp, url_prefix="/api/budgets")
     # app.register_blueprint(savings_bp, url_prefix="/api/savings")
     # app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
