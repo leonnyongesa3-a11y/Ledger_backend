@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from extensions import db
 from models.transaction import Transaction
@@ -9,26 +8,19 @@ from models.category import Category
 
 transactions_bp = Blueprint("transactions", __name__)
 
-@transactions_bp.route("/", methods=["GET"])
-@jwt_required()
+@transactions_bp.route("", methods=["GET"])
 def get_transactions():
 
-    user_id = get_jwt_identity()
 
     transactions = (
-        Transaction.query
-        .filter_by(user_id=user_id)
-        .order_by(Transaction.date.desc())
+        Transaction.query.order_by(Transaction.date.desc())
         .all()
     )
 
     return jsonify([t.to_dict() for t in transactions]), 200
 
 @transactions_bp.route("/<int:id>", methods=["GET"])
-@jwt_required()
 def get_transaction(id):
-
-    user_id = get_jwt_identity()
 
     transaction = Transaction.query.filter_by(
         id=id,
@@ -40,11 +32,9 @@ def get_transaction(id):
 
     return jsonify(transaction.to_dict()), 200
 
-@transactions_bp.route("/", methods=["POST"])
-@jwt_required()
+@transactions_bp.route("", methods=["POST"])
 def create_transaction():
 
-    user_id = get_jwt_identity()
 
     data = request.get_json()
 
@@ -61,7 +51,6 @@ def create_transaction():
 
     category = Category.query.filter_by(
         id=category_name,
-        user_id=user_id
     ).first()
 
     if not category:
@@ -77,7 +66,6 @@ def create_transaction():
             date,
             "%Y-%m-%d"
         ).date(),
-        user_id=user_id,
         category_id=category.id
     )
 
@@ -87,14 +75,11 @@ def create_transaction():
     return jsonify(transaction.to_dict()), 201
 
 @transactions_bp.route("/<int:id>", methods=["PATCH"])
-@jwt_required()
 def update_transaction(id):
 
-    user_id = get_jwt_identity()
 
     transaction = Transaction.query.filter_by(
         id=id,
-        user_id=user_id
     ).first()
 
     if not transaction:
@@ -131,7 +116,7 @@ def update_transaction(id):
                 "error": "Category not found."
             }), 404
 
-        transaction.category_id = "category.id"
+        transaction.category_id = category.id
 
     db.session.commit()
 
