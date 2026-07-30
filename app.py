@@ -20,7 +20,6 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    jwt.init_app(app)
 
     # Enable CORS for your React frontend
     cors.init_app(

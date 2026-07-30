@@ -24,7 +24,6 @@ def get_transaction(id):
 
     transaction = Transaction.query.filter_by(
         id=id,
-        user_id=user_id
     ).first()
 
     if not transaction:
@@ -108,7 +107,6 @@ def update_transaction(id):
 
         category = Category.query.filter_by(
             id=data["category"],
-            user_id=user_id
         ).first()
 
         if not category:
@@ -123,14 +121,11 @@ def update_transaction(id):
     return jsonify(transaction.to_dict()), 200
 
 @transactions_bp.route("/<int:id>", methods=["DELETE"])
-@jwt_required()
-def delete_transaction(id):
 
-    user_id = get_jwt_identity()
+def delete_transaction(id):
 
     transaction = Transaction.query.filter_by(
         id=id,
-        user_id=user_id
     ).first()
 
     if not transaction:
