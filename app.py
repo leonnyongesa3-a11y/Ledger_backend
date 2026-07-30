@@ -23,15 +23,16 @@ def create_app():
 
     # Enable CORS for your React frontend
     cors.init_app(
-        app,
-        resources={
-            r"/*": {
-                "origins": [
-                    "http://localhost:5173"
-                ]
-            }
+    app,
+    resources={
+        r"/api/*": {
+            "origins": [
+                "http://localhost:5173",
+                "http://127.0.0.1:5173"
+            ]
         }
-    )
+    }
+)
 
     # Home route
     @app.route("/")
@@ -49,8 +50,12 @@ def create_app():
     app.register_blueprint(savings_bp, url_prefix="/api/savings")
     app.register_blueprint(dashboard_bp, url_prefix="/api/dashboard")
 
-    return app
+    print("\n=== REGISTERED ROUTES ===")
+    for rule in app.url_map.iter_rules():
+        print(f"{rule} -> {sorted(rule.methods)}")
+    print("=========================\n")
 
+    return app
 
 app = create_app()
 
