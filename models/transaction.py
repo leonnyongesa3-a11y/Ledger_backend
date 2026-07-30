@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 
 from extensions import db
 
@@ -8,20 +8,20 @@ class Transaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
-    title = db.Column(db.String(150), nullable=False)
+    merchant = db.Column(db.String(150), nullable=False)
 
     amount = db.Column(db.Float, nullable=False)
-
-    type = db.Column(db.String(20), nullable=False)
-    # Expected values: "Income" or "Expense"
 
     date = db.Column(
         db.Date,
         nullable=False,
-        default=datetime.utcnow
+        default=date.today
     )
 
-    description = db.Column(db.Text)
+    type = db.Column(
+        db.String(20),
+        nullable=False
+    )   # credit or debit
 
     # Foreign Keys
     user_id = db.Column(
@@ -50,14 +50,11 @@ class Transaction(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "title": self.title,
+            "merchant": self.merchant,
             "amount": self.amount,
-            "type": self.type,
             "date": self.date.isoformat(),
-            "description": self.description,
+            "type": self.type,
             "user_id": self.user_id,
-            "category_id": self.category_id
+            "category_id": self.category_id,
+            "category": self.category.name if self.category else None,
         }
-
-    def __repr__(self):
-        return f"<Transaction {self.title}>"
