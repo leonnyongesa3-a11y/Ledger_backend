@@ -2,8 +2,8 @@ from flask import Flask, jsonify
 from config import Config
 from extensions import db, migrate, jwt, cors
 
-# Import blueprints (we'll create these next)
-# from routes.auth import auth_bp
+# Import blueprints 
+from routes.auth import auth_bp
 # from routes.transactions import transactions_bp
 # from routes.categories import categories_bp
 # from routes.budgets import budgets_bp
@@ -43,7 +43,7 @@ def create_app():
         }), 200
 
     # Register blueprints
-    # app.register_blueprint(auth_bp, url_prefix="/api/auth")
+    app.register_blueprint(auth_bp, url_prefix="/api/auth")
     # app.register_blueprint(transactions_bp, url_prefix="/api/transactions")
     # app.register_blueprint(categories_bp, url_prefix="/api/categories")
     # app.register_blueprint(budgets_bp, url_prefix="/api/budgets")
