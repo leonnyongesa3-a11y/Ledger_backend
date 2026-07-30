@@ -38,32 +38,30 @@ def register():
     db.session.add(user)
     db.session.commit()
 
+    DEFAULT_CATEGORIES = [
+        "Groceries",
+        "Dining",
+        "Transport",
+        "Shopping",
+        "Subscriptions",
+        "Health",
+        "Utilities",
+        "Other"
+    ]
+
+    for category_name in DEFAULT_CATEGORIES:
+        category = Category(
+            name=category_name,
+            user_id=user.id
+        )
+        db.session.add(category)
+
+    db.session.commit()
+
     return jsonify({
         "message": "Account created successfully.",
         "user": user.to_dict()
     }), 201
-
-
-DEFAULT_CATEGORIES = [
-    "Groceries",
-    "Dining",
-    "Transport",
-    "Shopping",
-    "Subscriptions",
-    "Health",
-    "Utilities",
-    "Other"
-]
-
-for category_name in DEFAULT_CATEGORIES:
-    db.session.add(
-        Category(
-            name=category_name,
-            user_id=User.id
-        )
-    )
-
-db.session.commit()
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
