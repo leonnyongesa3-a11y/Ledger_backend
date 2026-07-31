@@ -52,7 +52,7 @@ def create_transaction():
         }), 400
 
     category = Category.query.filter_by(
-        id=category_name,
+        name=category_name,
     ).first()
 
     print("Category found:", category)
@@ -70,8 +70,11 @@ def create_transaction():
             date,
             "%Y-%m-%d"
         ).date(),
+        user_id=1,
         category_id=category.id
     )
+
+    print(transaction.user_id)
 
     db.session.add(transaction)
     db.session.commit()
@@ -111,7 +114,7 @@ def update_transaction(id):
     if "category" in data:
 
         category = Category.query.filter_by(
-            id=data["category"],
+            name=data["category"],
         ).first()
 
         if not category:
