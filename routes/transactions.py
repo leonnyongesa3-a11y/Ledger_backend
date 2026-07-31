@@ -34,6 +34,8 @@ def get_transaction(id):
 @jwt_required()
 def create_transaction():
 
+    user_id = int(get_jwt_identity())
+
     print("POST route reached")
 
     data = request.get_json()
@@ -55,6 +57,7 @@ def create_transaction():
 
     category = Category.query.filter_by(
         name=category_name,
+        user_id=user_id
     ).first()
 
     print("Category found:", category)
@@ -72,7 +75,7 @@ def create_transaction():
             date,
             "%Y-%m-%d"
         ).date(),
-        user_id=user_id,
+        user_id = int(get_jwt_identity()),
         category_id=category.id
     )
 
@@ -131,11 +134,14 @@ def update_transaction(id):
     return jsonify(transaction.to_dict()), 200
 
 @transactions_bp.route("/<int:id>", methods=["DELETE"])
-
+@jwt_required()
 def delete_transaction(id):
+
+    user_id = int(get_jwt_identity())
 
     transaction = Transaction.query.filter_by(
         id=id,
+        user_id=user_id
     ).first()
 
     if not transaction:
