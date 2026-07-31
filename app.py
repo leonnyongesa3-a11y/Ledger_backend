@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from config import Config
-from extensions import db, migrate, cors
+from extensions import db, migrate, jwt, cors
 
 # Import blueprints 
 from routes.auth import auth_bp

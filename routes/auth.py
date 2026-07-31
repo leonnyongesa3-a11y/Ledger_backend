@@ -87,7 +87,7 @@ def login():
 
     return jsonify({
         "message": "Login successful.",
-        "token": token,
+        "access_token": token,
         "user": user.to_dict()
     }), 200
 
@@ -98,19 +98,29 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 @jwt_required()
 def profile():
 
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, int(user_id))
 
-    return jsonify(user.to_dict())
+    if not user:
+        return jsonify({
+            "error": "User not found."
+        }), 404
+
+    return jsonify(user.to_dict()), 200
 
 @auth_bp.route("/profile", methods=["PATCH"])
 @jwt_required()
 def update_profile():
 
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
 
-    user = User.query.get(user_id)
+    user = db.session.get(User, user_id)
+
+    if not user:
+        return jsonify({
+            "error": "User not found"
+        }), 404
 
     data = request.get_json()
 
@@ -125,4 +135,4 @@ def update_profile():
     return jsonify({
         "message": "Profile updated.",
         "user": user.to_dict()
-    })
+    }), 200

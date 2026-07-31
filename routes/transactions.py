@@ -1,5 +1,5 @@
 from datetime import datetime
-
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import Blueprint, jsonify, request
 
 from extensions import db
@@ -31,7 +31,9 @@ def get_transaction(id):
     return jsonify(transaction.to_dict()), 200
 
 @transactions_bp.route("", methods=["POST"])
+@jwt_required()
 def create_transaction():
+
     print("POST route reached")
 
     data = request.get_json()
@@ -70,7 +72,7 @@ def create_transaction():
             date,
             "%Y-%m-%d"
         ).date(),
-        user_id=1,
+        user_id=user_id,
         category_id=category.id
     )
 
