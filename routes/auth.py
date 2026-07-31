@@ -83,6 +83,9 @@ def login():
             "error": "Invalid email or password."
         }), 401
 
+    if user:
+        print("Password correct:", user.check_password(password))    
+
     token = create_access_token(identity=str(user.id))
 
     return jsonify({
