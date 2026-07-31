@@ -10,7 +10,6 @@ from routes.budgets import budgets_bp
 from routes.savings import savings_bp
 from routes.dashboard import dashboard_bp
 
-
 def create_app():
     app = Flask(__name__)
 
