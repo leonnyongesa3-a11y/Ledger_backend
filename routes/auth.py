@@ -58,20 +58,28 @@ def register():
 
     db.session.commit()
 
+    token = create_access_token(identity=str(user.id))
+
     return jsonify({
-        "message": "Account created successfully.",
-        "user": user.to_dict()
+    "message": "Account created successfully.",
+    "token": token,
+    "user": user.to_dict()
     }), 201
 
 @auth_bp.route("/login", methods=["POST"])
 def login():
 
     data = request.get_json()
+    print("Login data:", data)
 
     email = data.get("email")
     password = data.get("password")
 
     user = User.query.filter_by(email=email).first()
+    print("User:", user)
+
+    if user:
+        print("Password correct:", user.check_password(password))
 
     if not user:
         return jsonify({
@@ -83,19 +91,15 @@ def login():
             "error": "Invalid email or password."
         }), 401
 
-    if user:
-        print("Password correct:", user.check_password(password))    
-
     token = create_access_token(identity=str(user.id))
 
     return jsonify({
         "message": "Login successful.",
-        "access_token": token,
+        "token": token,
         "user": user.to_dict()
     }), 200
 
 from flask_jwt_extended import jwt_required, get_jwt_identity
-
 
 @auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
